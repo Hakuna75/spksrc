@@ -1,0 +1,46 @@
+*** setup.py	2018-06-25 23:13:39.371269389 +0000
+--- setup.py	2018-06-25 20:36:33.117762367 +0000
+***************
+*** 1096,1102 ****
+              dblib_dir = None
+  
+          # The sqlite interface
+!         sqlite_setup_debug = False   # verbose debug prints from this script?
+  
+          # We hunt for #define SQLITE_VERSION "n.n.n"
+          # We need to find >= sqlite version 3.0.8
+--- 1097,1103 ----
+              dblib_dir = None
+  
+          # The sqlite interface
+!         sqlite_setup_debug = True   # verbose debug prints from this script?
+  
+          # We hunt for #define SQLITE_VERSION "n.n.n"
+          # We need to find >= sqlite version 3.0.8
+***************
+*** 1148,1153 ****
+--- 1149,1156 ----
+                                          sqlite_version, MIN_SQLITE_VERSION))
+                  elif sqlite_setup_debug:
+                      print("sqlite: %s had no SQLITE_VERSION"%(f,))
++             elif sqlite_setup_debug:
++                 print("%s/sqlite3.h: not found" % d)
+  
+          if sqlite_incdir:
+              sqlite_dirs_to_check = [
+***************
+*** 1156,1165 ****
+--- 1159,1171 ----
+                  os.path.join(sqlite_incdir, '..', '..', 'lib64'),
+                  os.path.join(sqlite_incdir, '..', '..', 'lib'),
+              ]
++             print("sqlite incdir %s; need to find libdir: %s" % (sqlite_incdir, sqlite_dirs_to_check))
+              sqlite_libfile = self.compiler.find_library_file(
+                                  sqlite_dirs_to_check + lib_dirs, 'sqlite3')
+              if sqlite_libfile:
+                  sqlite_libdir = [os.path.abspath(os.path.dirname(sqlite_libfile))]
++             elif sqlite_setup_debug:
++                 print("libsqlite3* not found in [%s]" % (sqlite_dirs_to_check + lib_dirs))
+  
+          if sqlite_incdir and sqlite_libdir:
+              sqlite_srcs = ['_sqlite/cache.c',
